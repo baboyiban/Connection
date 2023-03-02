@@ -20,10 +20,8 @@ public class ConnectController {
 	
 	@GetMapping("/json")
 	@ResponseBody
-	public Map<String,Object> json() throws IOException {
-		Map<String,Object> map = new HashMap<>();
+	public String json() throws IOException {
 		String response = svc.get("http://localhost:7878/json");
-		map.put("result", response);
-		return map;
+		return response;
 	}
 }
