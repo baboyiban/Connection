@@ -16,12 +16,12 @@ import com.example.demo.connect.ConnectService;
 @RequestMapping("/connect")
 public class ConnectController {
 	@Autowired
-	private ConnectService svc;
+	private ConnectService connectService;
 	
 	@GetMapping("/json")
 	@ResponseBody
 	public String json() throws IOException {
-		String response = svc.get("http://localhost:7878/json");
+		String response = connectService.get("http://localhost:7878/json");
 		return response;
 	}
 }
