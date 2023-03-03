@@ -20,16 +20,22 @@ public class ConnectController {
 	@Autowired
 	private ConnectService connectService;
 	
-	@GetMapping("")
+	@GetMapping("/get")
 	@ResponseBody
-	public String connect(String url) throws IOException {
+	public String get(String url) throws IOException {
 		String response = connectService.get(url);
 		return response;
+	}
+	
+	@GetMapping("/post")
+	@ResponseBody
+	public String post(String url) throws IOException, ParseException {
+		return connectService.post(url);
 	}
 	
 	@GetMapping("/json")
 	@ResponseBody
 	public String json(String url) throws IOException, ParseException {
-		return connectService.post(url);
+		return connectService.json(url);
 	}
 }

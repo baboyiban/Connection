@@ -48,18 +48,43 @@ public class ConnectService {
         HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
 
         connection.setRequestMethod("POST");     // POST 방식 요청
-        //connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setDoOutput(true);
+
+        String data = "test data";
+        
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(data);
+        outputStream.flush();
+        outputStream.close();
+        
+        int responseCode = connection.getResponseCode();
+        System.out.println("resposneCode:"+responseCode);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuffer stringBuffer = new StringBuffer();
+        String inputLine;
+
+        while ((inputLine = bufferedReader.readLine()) != null)  {
+            stringBuffer.append(inputLine);
+        }
+        bufferedReader.close();
+
+        String response = stringBuffer.toString();
+        System.out.println("response:"+response);
+        
+        return response;
+    }
+    
+    public String json(String url) throws IOException, ParseException {
+        URL url2 = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
+
+        connection.setRequestMethod("POST");     // POST 방식 요청
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
-        /*
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(DATA);
-        outputStream.flush();
-        outputStream.close();
-        */
-        
-        String json = "{\"ename\":\"smith\"}";
+        String json = "{\"id\":1,\"title\":\"Hello\",\"content\":\"Hello, World!\"}";
         
         JSONParser jsPar = new JSONParser();
         JSONObject jsObj = (JSONObject)jsPar.parse(json);
@@ -78,7 +103,7 @@ public class ConnectService {
         StringBuffer stringBuffer = new StringBuffer();
         String inputLine;
 
-        while ((inputLine = bufferedReader.readLine()) != null)  {
+        while ((inputLine = bufferedReader.readLine()) != null) {
             stringBuffer.append(inputLine);
         }
         bufferedReader.close();
