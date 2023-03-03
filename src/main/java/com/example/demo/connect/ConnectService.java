@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -44,40 +45,7 @@ public class ConnectService {
         return response;
     }
     
-    public String post(String url) throws IOException, ParseException {
-        URL url2 = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
-
-        connection.setRequestMethod("POST");     // POST 방식 요청
-        connection.setRequestProperty("User-Agent", USER_AGENT);
-        connection.setDoOutput(true);
-
-        String data = "test data";
-        
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(data);
-        outputStream.flush();
-        outputStream.close();
-        
-        int responseCode = connection.getResponseCode();
-        System.out.println("resposneCode:"+responseCode);
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuffer stringBuffer = new StringBuffer();
-        String inputLine;
-
-        while ((inputLine = bufferedReader.readLine()) != null)  {
-            stringBuffer.append(inputLine);
-        }
-        bufferedReader.close();
-
-        String response = stringBuffer.toString();
-        System.out.println("response:"+response);
-        
-        return response;
-    }
-    
-    public String json(String url) throws IOException, ParseException {
+    public String post(String url, Map<String,String> map) throws IOException, ParseException {
         URL url2 = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
 
@@ -85,15 +53,8 @@ public class ConnectService {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
-        String json = "{\"id\":1,\"title\":\"Hello\",\"content\":\"Hello, World!\"}";
-        
-        JSONParser jsPar = new JSONParser();
-        JSONObject jsObj = (JSONObject)jsPar.parse(json);
-        
-        System.out.println("json:"+json);
-        
         OutputStream os = connection.getOutputStream();
-        os.write(jsObj.toJSONString().getBytes());
+        os.write(new JSONObject(map).toJSONString().getBytes());
         os.flush();
         os.close();
 
