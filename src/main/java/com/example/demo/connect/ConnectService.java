@@ -27,6 +27,7 @@ public class ConnectService {
         connection.setRequestProperty("User-Agent", USER_AGENT);
 
         int responseCode = connection.getResponseCode();
+        System.out.println("resposneCode:"+responseCode);
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuffer stringBuffer = new StringBuffer();
