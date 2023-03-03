@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,17 +20,16 @@ public class ConnectController {
 	@Autowired
 	private ConnectService connectService;
 	
-	@GetMapping("/json")
+	@GetMapping("")
 	@ResponseBody
-	public String json() throws IOException {
-		String response = connectService.get("http://localhost:7878/json");
+	public String connect(String url) throws IOException {
+		String response = connectService.get(url);
 		return response;
 	}
 	
-	@GetMapping("/predict/{num}")
+	@GetMapping("/json")
 	@ResponseBody
-	public String predict(@PathVariable(name="num") Integer num) throws IOException {
-		String response = connectService.get("http://localhost:7878/predict/"+num);
-		return response;
+	public String json(String url) throws IOException, ParseException {
+		return connectService.post(url);
 	}
 }

@@ -5,9 +5,13 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,18 +43,33 @@ public class ConnectService {
         return response;
     }
     
-    public String post(String url) throws IOException {
+    public String post(String url) throws IOException, ParseException {
         URL url2 = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
 
         connection.setRequestMethod("POST");     // POST 방식 요청
-        connection.setRequestProperty("User-Agent", USER_AGENT);
+        //connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
+        /*
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(DATA);
         outputStream.flush();
         outputStream.close();
+        */
+        
+        String json = "{\"ename\":\"smith\"}";
+        
+        JSONParser jsPar = new JSONParser();
+        JSONObject jsObj = (JSONObject)jsPar.parse(json);
+        
+        System.out.println("json:"+json);
+        
+        OutputStream os = connection.getOutputStream();
+        os.write(jsObj.toJSONString().getBytes());
+        os.flush();
+        os.close();
 
         int responseCode = connection.getResponseCode();
         System.out.println("resposneCode:"+responseCode);
